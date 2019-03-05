@@ -35,7 +35,7 @@ To disconnect, type 'exit' or blank.\n> "
 
                 sock.sendall(b'\n')
                 recieved = sock.recv(512)
-                expected = b"Disconnected.\n"
+                expected = b"Disconnecting.\n"
                 self.assertEqual(expected, recieved)
 
         time.sleep(0.01)  # サーバの準備完了待ち
