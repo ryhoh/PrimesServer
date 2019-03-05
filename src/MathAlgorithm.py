@@ -36,6 +36,7 @@ def eratosthenes(end: int) -> list:
 
 def generate_primes_str(end: int) -> str:
     primes_str = list(map(str, eratosthenes(end)))
+
     if len(primes_str) == 0:
         return "None"
     else:

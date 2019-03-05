@@ -1,5 +1,7 @@
 import socket
-from src.MathAlgorithm import generate_primes_str
+import sys
+sys.path.append('..')
+from src import MathAlgorithm
 
 PORT = 12357
 
@@ -12,7 +14,8 @@ To disconnect, type 'exit' or blank.\n"
 
     with connection:
         while True:
-            received = connection.recv(10)  # 計算量を考えれば9桁で十分
+            received = connection.recv(4096)  # fixme ストリームに残るデータにより不正な動作
+
             if received == b'\n' or received == b'exit\n':
                 connection.sendall(b"Disconnected.\n")
                 break
@@ -23,7 +26,7 @@ To disconnect, type 'exit' or blank.\n"
 
             try:
                 input_val = int(received.decode())
-                res = generate_primes_str(input_val).encode()
+                res = MathAlgorithm.generate_primes_str(input_val).encode()
                 res += b"\n> "
                 connection.sendall(res)
             except ValueError:
@@ -32,7 +35,7 @@ To disconnect, type 'exit' or blank.\n"
 
 def serve():
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
-        sock.bind(('127.0.0.1', PORT))
+        sock.bind((socket.gethostname(), PORT))
         sock.listen(5)
         while True:
             # 切断時以外では，メッセージ末尾に改行とプロンプトを表示する
